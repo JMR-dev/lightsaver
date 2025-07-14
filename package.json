@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "turbopack build",
+    "build": "turbo build",
+    "check-types": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  }, 
   "keywords": [],
   "author": "Jason Ross",
   "license": "ISC",
@@ -19,7 +20,7 @@
   },
   "devDependencies": {
     "pnpm": "^10.13.1",
-    "turbopack": "^15.3.5",
+    "turbo": "^2.5.4",
     "typescript": "^5.8.3"
   }
 }
