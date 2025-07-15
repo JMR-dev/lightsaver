@@ -14,7 +14,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN rm -rf node_modules pnpm-lock.yaml
 RUN yes | pnpm install
 
 RUN pnpm turbo run build --filter=lightsaver_user_client...
