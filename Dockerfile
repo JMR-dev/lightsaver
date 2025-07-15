@@ -24,8 +24,6 @@ RUN ls -al /app/apps/lightsaver_user_client
 # 2. Production stage
 FROM node:22-slim
 
-# Enable corepack and prepare pnpm
-
 WORKDIR /app
 
 COPY --from=builder /app/apps/lightsaver_user_client ./
