@@ -15,7 +15,7 @@ RUN set -ex; \
 	rm -rf /var/lib/apt/lists/*
 
 # grab gosu for easy step-down from root
-ENV GOSU_VERSION 1.17
+ENV GOSU_VERSION=1.17
 RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
@@ -47,7 +47,7 @@ RUN set -eux; \
 	echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen; \
 	locale-gen; \
 	locale -a | grep 'en_US.utf8'
-ENV LANG en_US.utf8
+ENV LANG=en_US.utf8
 
 RUN set -eux; \
 	apt-get update; \
@@ -69,9 +69,9 @@ RUN set -ex; \
 	gpgconf --kill all; \
 	rm -rf "$GNUPGHOME"
 
-ENV PG_MAJOR 17
-ENV PATH $PATH:/usr/lib/postgresql/17/bin
-ENV PG_VERSION 17.5
+ENV PG_MAJOR=17
+ENV PATH=$PATH:/usr/lib/postgresql/17/bin
+ENV PG_VERSION=17.5
 
 RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture)"; \
@@ -96,11 +96,11 @@ RUN set -eux; \
 
 RUN install --verbose --directory --owner postgres --group postgres --mode 3777 /var/run/postgresql
 
-ENV PGDATA /var/lib/postgresql/data
+ENV PGDATA=/var/lib/postgresql/data
 RUN install --verbose --directory --owner postgres --group postgres --mode 1777 "$PGDATA"
 VOLUME /var/lib/postgresql/data
 
-COPY ./docker-entrypoint.sh ./docker-ensure-initdb.sh /usr/local/bin/
+COPY docker-entrypoint.sh docker-ensure-initdb.sh /usr/local/bin/
 RUN ln -sT docker-ensure-initdb.sh /usr/local/bin/docker-enforce-initdb.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
