@@ -1,20 +1,30 @@
-type Login {
+type userLogin {
     email: String!
     password: String!
   }
-type LoginResponse {
-    loginStatus: Boolean!
+type userLoginResponse {
+    userLoginSuccessStatus: Boolean!
   }
 
-type Subscription {
-  login: Login!
-  },
-  required: ["email", "password"]
-
-subscription login($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-      id
-      email
-    loginStatus
+type userLogout {
+    email: String!
   }
-}
+type userLogoutResponse {
+    userLoggedOutSuccessStatus: Boolean!
+  }
+type CreateUser {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    dateOfBirth: String!
+  }
+type CreateUserResponse {
+    userCreatedStatus: Boolean!
+  }
+
+type Mutation {
+    login(input: userLogin!): userLoginResponse!
+    logout(input: userLogout!): user LogoutResponse!
+    createUser(input: CreateUser!): CreateUserResponse!
+  }
