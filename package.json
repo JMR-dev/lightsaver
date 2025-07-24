@@ -31,12 +31,18 @@
     "@parcel/watcher": "^2.5.1",
     "pnpm": "^10.13.1",
     "turbo": "^2.5.5",
-  "typescript": "^5.8.3"
+    "typescript": "^5.8.3"
   },
   "pnpm": {
     "overrides": {
       "fetch-blob": "file:./local_packages/fetch-blob"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@apollo/protobufjs",
+      "@parcel/watcher",
+      "@tailwindcss/oxide",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
-
