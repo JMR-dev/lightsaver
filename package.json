@@ -35,7 +35,7 @@
   },
   "pnpm": {
     "overrides": {
-      "fetch-blob": "file:./local_packages/fetch-blob"
+      "fetch-blob": "npm:fetch-blob-fixed@^1.0.1"
     },
     "onlyBuiltDependencies": [
       "@apollo/protobufjs",

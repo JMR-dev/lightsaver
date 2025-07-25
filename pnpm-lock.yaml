@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  fetch-blob: file:./local_packages/fetch-blob
+  fetch-blob: npm:fetch-blob-fixed@^1.0.1
 
 importers:
 
@@ -2131,8 +2131,8 @@ packages:
       picomatch:
         optional: true
 
-  fetch-blob@file:local_packages/fetch-blob:
-    resolution: {directory: local_packages/fetch-blob, type: directory}
+  fetch-blob-fixed@1.0.1:
+    resolution: {integrity: sha512-nl0gaGLlMr6qOphl2qQpLhciY1WRCKBaiF0wfSXa+1lZrq0AYefl8+G8orODI4jmgTiZZAQkPHoYk/W0HUhhLg==}
     engines: {node: '>=18'}
 
   figures@3.2.0:
@@ -6032,8 +6032,8 @@ snapshots:
       '@typescript-eslint/parser': 8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3)
       eslint: 9.31.0(jiti@2.5.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.31.0(jiti@2.5.0))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.31.0(jiti@2.5.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.31.0(jiti@2.5.0))
       eslint-plugin-react: 7.37.5(eslint@9.31.0(jiti@2.5.0))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.31.0(jiti@2.5.0))
@@ -6052,7 +6052,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.31.0(jiti@2.5.0)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1(supports-color@5.5.0)
@@ -6063,22 +6063,22 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.31.0(jiti@2.5.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.31.0(jiti@2.5.0)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3)
       eslint: 9.31.0(jiti@2.5.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.31.0(jiti@2.5.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.31.0(jiti@2.5.0)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -6089,7 +6089,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.31.0(jiti@2.5.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.31.0(jiti@2.5.0))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.36.0(eslint@9.31.0(jiti@2.5.0))(typescript@5.8.3))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0)))(eslint@9.31.0(jiti@2.5.0))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -6309,7 +6309,7 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
-  fetch-blob@file:local_packages/fetch-blob: {}
+  fetch-blob-fixed@1.0.1: {}
 
   figures@3.2.0:
     dependencies:
@@ -6352,7 +6352,7 @@ snapshots:
 
   formdata-polyfill@4.0.10:
     dependencies:
-      fetch-blob: file:local_packages/fetch-blob
+      fetch-blob: fetch-blob-fixed@1.0.1
 
   forwarded@0.2.0: {}
 
@@ -7044,7 +7044,7 @@ snapshots:
   node-fetch@3.3.2:
     dependencies:
       data-uri-to-buffer: 4.0.1
-      fetch-blob: file:local_packages/fetch-blob
+      fetch-blob: fetch-blob-fixed@1.0.1
       formdata-polyfill: 4.0.10
 
   node-int64@0.4.0: {}
