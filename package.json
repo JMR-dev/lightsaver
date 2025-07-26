@@ -29,6 +29,7 @@
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-resolvers": "^4.5.1",
     "@parcel/watcher": "^2.5.1",
+    "@types/node": "^24.1.0",
     "pnpm": "^10.13.1",
     "turbo": "^2.5.5",
     "typescript": "^5.8.3"
