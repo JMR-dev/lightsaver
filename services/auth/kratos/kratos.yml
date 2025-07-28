@@ -1,0 +1,23 @@
+version: v0.11.0
+identity:
+  schemas:
+    - id: default
+      url: file:///etc/config/kratos/identity.schema.json
+dsn: postgres://postgres:secret@kratos-postgres:5432/kratos?sslmode=disable
+serve:
+  public:
+    base_url: http://localhost:4433/
+    cors:
+      enabled: true
+  admin:
+    base_url: http://localhost:4434/
+selfservice:
+  default_browser_return_url: http://localhost:3000/
+  flows:
+    login: {}
+    registration: {}
+  methods:
+    password:
+      enabled: true
+log:
+  level: debug

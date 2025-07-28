@@ -12,6 +12,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.13.1",
   "dependencies": {
+    "@ory/client-fetch": "^1.21.0",
     "apollo-server-express": "^3.13.0",
     "express": "^5.1.0",
     "graphql": "^16.11.0"
