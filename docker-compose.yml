@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: docker.io/library/postgres:16-alpine
+    container_name: lightsaver-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lightsaver}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lightsaver_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-lightsaver}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lightsaver}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lightsaver-network
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: docker.io/library/rabbitmq:3-management-alpine
+    container_name: lightsaver-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-lightsaver}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-lightsaver_dev}
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - lightsaver-network
+
+  # Backend API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: lightsaver-api
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${API_PORT:-4000}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lightsaver}:${POSTGRES_PASSWORD:-lightsaver_dev}@postgres:5432/${POSTGRES_DB:-lightsaver}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-lightsaver}:${RABBITMQ_PASSWORD:-lightsaver_dev}@rabbitmq:5672
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./services:/app/services
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/services/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - lightsaver-network
+    command: sh -c "cd /app && pnpm install && pnpm --filter api dev"
+
+  # Frontend Next.js Application
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: lightsaver-frontend
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4000/graphql}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/lightsaver_user_client:/app/apps/lightsaver_user_client
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/lightsaver_user_client/node_modules
+      - /app/apps/lightsaver_user_client/.next
+    depends_on:
+      - api
+    networks:
+      - lightsaver-network
+    command: sh -c "cd /app && pnpm install && pnpm --filter lightsaver_user_client dev"
+
+networks:
+  lightsaver-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  rabbitmq_data:

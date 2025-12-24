@@ -1,0 +1,35 @@
+# Backend API Dockerfile for Podman
+FROM docker.io/library/node:22-slim
+
+# Install required dependencies
+RUN apt-get update && \
+    apt-get dist-upgrade -y && \
+    apt-get install -y ca-certificates build-essential && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Enable corepack and prepare pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY turbo.json ./
+
+# Copy service and package directories
+COPY services/package.json ./services/
+COPY packages ./packages
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy service source code
+COPY services ./services
+
+# Expose API port
+EXPOSE 4000
+
+# Default command (can be overridden in docker-compose)
+CMD ["pnpm", "--filter", "api", "dev"]
