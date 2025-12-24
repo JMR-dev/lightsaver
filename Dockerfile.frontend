@@ -1,0 +1,35 @@
+# Frontend Dockerfile for Podman
+FROM docker.io/library/node:22-slim
+
+# Install required dependencies
+RUN apt-get update && \
+    apt-get dist-upgrade -y && \
+    apt-get install -y ca-certificates build-essential && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Enable corepack and prepare pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY turbo.json ./
+
+# Copy app and package directories
+COPY apps/lightsaver_user_client/package.json ./apps/lightsaver_user_client/
+COPY packages ./packages
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy app source code
+COPY apps/lightsaver_user_client ./apps/lightsaver_user_client
+
+# Expose Next.js port
+EXPOSE 3000
+
+# Default command (can be overridden in docker-compose)
+CMD ["pnpm", "--filter", "lightsaver_user_client", "dev", "--", "--turbopack"]

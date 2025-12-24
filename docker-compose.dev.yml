@@ -1,0 +1,61 @@
+version: '3.8'
+
+# Development-specific configuration
+# Usage: podman-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Add local SQL scripts for development
+      - ./scripts/db:/docker-entrypoint-initdb.d
+
+  rabbitmq:
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  api:
+    build:
+      target: builder
+    environment:
+      NODE_ENV: development
+      DEBUG: "api:*"
+    volumes:
+      # Enable hot-reload for development
+      - ./services:/app/services:z
+      - ./packages:/app/packages:z
+      # Prevent overwriting node_modules
+      - /app/node_modules
+      - /app/services/node_modules
+    stdin_open: true
+    tty: true
+
+  frontend:
+    build:
+      target: builder
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: 1
+    volumes:
+      # Enable hot-reload for development
+      - ./apps/lightsaver_user_client:/app/apps/lightsaver_user_client:z
+      - ./packages:/app/packages:z
+      # Prevent overwriting node_modules and build artifacts
+      - /app/node_modules
+      - /app/apps/lightsaver_user_client/node_modules
+      - /app/apps/lightsaver_user_client/.next
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+
+networks:
+  lightsaver-network:
+    driver: bridge
