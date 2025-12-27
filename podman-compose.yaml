@@ -1,0 +1,115 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: lightsaver_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-kratos}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-kratos}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - lightsaver_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kratos} -d ${POSTGRES_DB:-kratos}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: lightsaver_mailhog
+    ports:
+      - "8025:8025"
+    networks:
+      - lightsaver_network
+    restart: unless-stopped
+
+  kratos-migrate:
+    image: oryd/kratos:v1.2.0
+    container_name: lightsaver_kratos_migrate
+    environment:
+      DSN: postgres://${POSTGRES_USER:-kratos}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kratos}?sslmode=disable
+    volumes:
+      - ./infrastructure/kratos:/etc/config/kratos:ro
+    command: migrate sql -e --yes
+    networks:
+      - lightsaver_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  kratos:
+    image: oryd/kratos:v1.2.0
+    container_name: lightsaver_kratos
+    environment:
+      DSN: postgres://${POSTGRES_USER:-kratos}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kratos}?sslmode=disable
+      SECRETS_COOKIE: ${KRATOS_SECRETS_COOKIE}
+      SECRETS_CIPHER: ${KRATOS_SECRETS_CIPHER}
+      SERVE_PUBLIC_BASE_URL: ${KRATOS_PUBLIC_URL:-http://localhost:4433}
+      SERVE_ADMIN_BASE_URL: ${KRATOS_ADMIN_URL:-http://localhost:4434}
+      COURIER_SMTP_CONNECTION_URI: smtp://mailhog:1025/?disable_starttls=true
+    volumes:
+      - ./infrastructure/kratos:/etc/config/kratos:ro
+    command: >
+      sh -c "if [ '${KRATOS_DEV_MODE:-true}' = 'true' ]; then
+        kratos serve --config /etc/config/kratos/kratos.yaml --dev --watch-courier;
+      else
+        kratos serve --config /etc/config/kratos/kratos.yaml --watch-courier;
+      fi"
+    ports:
+      - "4433:4433"
+      - "4434:4434"
+    networks:
+      - lightsaver_network
+    depends_on:
+      kratos-migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_KRATOS_PUBLIC_URL: ${NEXT_PUBLIC_KRATOS_PUBLIC_URL:-http://localhost:4433}
+    container_name: lightsaver_frontend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_KRATOS_PUBLIC_URL: ${NEXT_PUBLIC_KRATOS_PUBLIC_URL:-http://localhost:4433}
+      KRATOS_ADMIN_URL: http://kratos:4434
+    ports:
+      - "3000:3000"
+    networks:
+      - lightsaver_network
+    depends_on:
+      - kratos
+    restart: unless-stopped
+
+  services:
+    build:
+      context: .
+      dockerfile: services/Dockerfile
+    container_name: lightsaver_services
+    environment:
+      NODE_ENV: production
+      KRATOS_ADMIN_URL: http://kratos:4434
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    networks:
+      - lightsaver_network
+    depends_on:
+      - kratos
+    restart: unless-stopped
+
+networks:
+  lightsaver_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
